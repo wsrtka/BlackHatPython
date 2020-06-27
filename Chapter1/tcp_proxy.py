@@ -84,7 +84,7 @@ def proxy_handler(client_socket, remote_host, remote_port, receive_first):
 def hexdump(src, length=16):
     
     result = []
-    digits = 4 if isinstance(src, unicode) else 2
+    digits = 4  
 
     for i in range(0, len(src), length):
 
@@ -94,6 +94,36 @@ def hexdump(src, length=16):
         result.append(b'%04X %-*s %s' % (i, length*(digits + 1), hexa, text))
 
     print(b'\n'.join(result))
+
+
+def receive_from(connection):
+
+    buffer = ""
+
+    connection.settimeout(2)
+
+    try:
+        while True:
+            data = connection.recv(4096)
+
+            if not data:
+                break
+
+            buffer += data
+    except:
+        pass
+    
+    return buffer.decode()
+
+
+def request_handler(buffer):
+    # buffer modifications
+    return buffer
+
+
+def response_handler(buffer):
+    # buffer modifications
+    return buffer
 
 
 def main():
