@@ -27,8 +27,8 @@ def ssh_command(ip, user, passwd, command):
             try:
                 cmd_output = subprocess.check_output(command, shell=True)
                 ssh_session.send(cmd_output)
-            except:
-                ssh_session.send('fail')
+            except Exception as e:
+                ssh_session.send(str(e))
 
         client.close()
     
