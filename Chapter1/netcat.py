@@ -38,7 +38,7 @@ def main():
             client.connect((target, port))
 
             if len(buffer):
-                client.send(buffer)
+                client.send(buffer.encode())
 
             while True:
 
@@ -59,8 +59,7 @@ def main():
                 buffer = input('')
                 buffer += '\n'
 
-                client.send(buffer)
-
+                client.send(buffer.encode())
         except:
             print('[*] Error encountered, closing.')
             client.close()
@@ -111,7 +110,7 @@ def main():
 
                 response = run_command(cmd_buffer)
 
-                client_socket.send(response.encode())
+                client_socket.send(response)
 
 
     def server_loop():
