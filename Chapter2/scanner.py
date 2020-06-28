@@ -2,10 +2,30 @@ import socket
 import os
 import struct
 from ctypes import *
+import threading
+import time
+from netaddr import IPNetwork, IPAddress
 
 
 # host ip to listen on
 host = '192.168.1.114'
+# target subnet
+subnet = '192.168.0.0/24'
+# msg to check ICMP responses
+magic_message = 'gottem'
+
+
+def udp_sender(subnet, magic_message):
+
+    time.sleep(5)
+
+    sender = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    for ip in IPNetwork(subnet):
+        try:
+            sender.sendto(magic_message, ('%s' %ip, 65212))
+        except Exception as e:
+            print(str(e))       
 
 
 class IP(Structure):
@@ -76,6 +96,9 @@ sniffer.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1)
 if os.name == 'nt':
     sniffer.ioctl(socket.SIO_RCVALL, socket.RCVALL_ON)
 
+t = threading.Thread(target=udp_sender, args=(subnet, magic_message))
+t.start()
+
 try:
     while True:
 
@@ -94,6 +117,11 @@ try:
             icmp_header = ICMP(buf)
 
             print('ICMP -> Type: %d Code: %d' % (icmp_header.type, icmp_header.code))
+
+            if icmp_header.code == 3 and icmp_header.type == 3:
+                if IPAddress(ip_header.src_address) in IPNetwork(subnet):
+                    if raw_buffer[len(raw_buffer) - len(magic_message):] == magic_message:
+                        print('Host: %s' % ip_header.src_address)
 # end sniffer with ctrl+c
 except KeyboardInterrupt:
     if os.name == 'nt':
