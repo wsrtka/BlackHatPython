@@ -21,7 +21,7 @@ class Server(paramiko.ServerInterface):
 
     def check_auth_password(self, username, password):
 
-        if username == 'wsrtk' and password = 'none':
+        if username == 'wsrtk' and password == 'none':
             return paramiko.AUTH_SUCCESSFUL
         
         return paramiko.AUTH_FAILED
