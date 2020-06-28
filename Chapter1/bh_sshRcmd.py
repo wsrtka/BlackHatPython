@@ -18,7 +18,7 @@ def ssh_command(ip, user, passwd, command):
 
         ssh_session.send(command)
 
-        print(ssh_session.recv(1024))
+        print(ssh_session.recv(1024).decode())
 
         while True:
 
@@ -34,4 +34,4 @@ def ssh_command(ip, user, passwd, command):
     
     return
 
-ssh_command('192.168.100.130', 'wsrtk', 'none', 'ClientConnected')
+ssh_command('127.0.0.1', 'wsrtk', 'none', 'ClientConnected')

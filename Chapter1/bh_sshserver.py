@@ -3,7 +3,7 @@ import paramiko
 import threading
 import sys
 
-host_key = paramiko.RSAKey(filename='test_rsa.key')
+host_key = paramiko.RSAKey(key=1).generate(2048)
 
 
 class Server(paramiko.ServerInterface):
@@ -28,12 +28,12 @@ class Server(paramiko.ServerInterface):
 
 
 server = sys.argv[1]
-ssh_port = sys.argv[2]
+ssh_port = int(sys.argv[2])
 
 try:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     sock.bind((server, ssh_port))
     sock.listen(100)
@@ -70,7 +70,7 @@ try:
             if command != exit:
 
                 chan.send(command)
-                print(chan.recv(1024) + '\n')
+                print(chan.recv(1024).decode() + '\n')
 
             else:
 
