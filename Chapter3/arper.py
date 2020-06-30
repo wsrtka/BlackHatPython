@@ -6,7 +6,7 @@ import signal
 
 
 interface = 'wlp2s0'
-target_ip = '192.168.1.114'
+target_ip = '192.168.1.120'
 gateway_ip = '192.168.1.1'
 packet_count = 1000
 
@@ -23,7 +23,7 @@ def restore_target(gateway_ip, gateway_mac, target_ip, target_mac):
 
 def get_mac(ip_address):
 
-    responses, unanswered = srp(Ether(dst='ff:ff:ff:ff:ff:ff')/ARP(pdst=ip_address, timeout=2, retry=10))
+    responses, unanswered = srp(Ether(dst='ff:ff:ff:ff:ff:ff')/ARP(pdst=ip_address), timeout=2, retry=10)
 
     for s, r in responses:
         return r[Ether].src
