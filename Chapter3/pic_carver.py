@@ -69,7 +69,7 @@ def face_detect(path, file_name):
     for x1, y1, x2, y2 in rects:
         cv2.rectangle(img, (x1, y1), (x2, y2), (127, 252, 0), 2)
 
-    cv2.imwrite('%s/%s-%s' % (faces_directoryu, pcap_file, file_name), img)
+    cv2.imwrite('%s/%s-%s' % (faces_directory, pcap_file, file_name), img)
 
     return True
 
@@ -89,7 +89,7 @@ def http_assembler(pcap_file):
         for packet in sessions[session]:
 
             try:
-                if packet[TCP].dport == 80 or packet[TCP].sport = 80:
+                if packet[TCP].dport == 80 or packet[TCP].sport == 80:
                     http_payload += str(packet[TCP].payload)
             except:
                 pass
