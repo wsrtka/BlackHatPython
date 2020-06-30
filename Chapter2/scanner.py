@@ -4,7 +4,7 @@ import struct
 from ctypes import *
 import threading
 import time
-from netaddr import IPNetwork, IPAddress
+from netaddr import IPAddress, IPNetwork
 
 
 # host ip to listen on
