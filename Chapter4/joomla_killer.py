@@ -103,4 +103,36 @@ class Bruter(object):
                 print('[*] Password: %s' % brute)
                 print('[*] Waiting for other processess to finish...')
 
+
+def build_wordlist(wordlist_file):
+
+    fd = open(wordlist_file, 'rb')
+    raw_words = fd.readlines()
+    fd.close()
+
+    found_resume = False
+    words = queue.Queue()
+
+    for word in raw_words:
+
+        word = word.strip()
+
+        if resume is not None:
+            if found_resume:
+                words.put(word)
             
+            else:
+                if word == resume:
+                    found_resume = True
+                    print('Resuming process from %s' % resume)
+
+        else:
+            words.put(word)
+
+    return words
+
+
+words = build_wordlist(wordlist_file)
+
+bruter_obj = Bruter(username, words)
+bruter_obj.run_bruteforce()
